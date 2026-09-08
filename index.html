@@ -185,7 +185,7 @@
             margin-bottom: 5px;
         }
 
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -220,32 +220,10 @@
             margin-top: 8px;
         }
 
-        /* Filter Section */
-        .filter-section {
-            max-width: 900px;
-            margin: -25px auto 30px;
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .filter-control {
-            flex: 1 1 200px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
         /* Section Title */
         .section-title {
             max-width: 1100px;
-            margin: 0 auto 20px;
+            margin: 30px auto 20px;
             padding: 0 20px;
             font-size: 20px;
             font-weight: 700;
@@ -272,12 +250,13 @@
             position: relative;
         }
 
-        .card-img-wrapper {
+        .card-media-wrapper {
             position: relative;
-            height: 180px;
+            height: 200px;
+            background: #000;
         }
 
-        .card-img {
+        .card-img, .card-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -293,6 +272,7 @@
             border-radius: 5px;
             font-size: 11px;
             font-weight: bold;
+            z-index: 2;
         }
 
         .badge-type {
@@ -305,6 +285,7 @@
             border-radius: 5px;
             font-size: 11px;
             font-weight: bold;
+            z-index: 2;
         }
 
         .btn-delete {
@@ -319,6 +300,7 @@
             font-size: 11px;
             cursor: pointer;
             display: none;
+            z-index: 2;
         }
 
         .card-body {
@@ -356,6 +338,12 @@
             font-size: 16px;
         }
 
+        .action-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         .btn-preview {
             display: block;
             width: 100%;
@@ -367,6 +355,19 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
+        }
+
+        .btn-video-link {
+            display: block;
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
         }
 
         footer {
@@ -406,7 +407,7 @@
     <!-- Admin Panel Modal -->
     <div class="admin-modal" id="adminModal">
         <div class="admin-box">
-            <h2>لوحة إضافة أرض جديدة (خاص بالمدير)</h2>
+            <h2>لوحة إضافة أرض جديدة (مع صورة وفيديو)</h2>
             <form id="addLandForm">
                 <div class="form-group">
                     <label>كود الأرض (مثال: K5)</label>
@@ -440,6 +441,10 @@
                     <label>رابط صورة الأرض (URL)</label>
                     <input type="url" id="landImg" placeholder="https://..." required>
                 </div>
+                <div class="form-group">
+                    <label>رابط فيديو الأرض (اختياري - يوتيوب / تيك توك / MP4)</label>
+                    <input type="url" id="landVideo" placeholder="https://youtube.com/... أو رابط فيديو مباشر">
+                </div>
                 <button type="submit" class="btn-submit-land">➕ نشر الأرض فوراً</button>
                 <button type="button" class="btn-close-admin" onclick="closeAdminModal()">إغلاق</button>
             </form>
@@ -450,9 +455,7 @@
     <h2 class="section-title">الأراضي المعروضة حالياً</h2>
 
     <!-- Land Cards Grid -->
-    <div class="lands-grid" id="landsGrid">
-        <!-- الأراضي يتم تحميلها هنا تلقائياً -->
-    </div>
+    <div class="lands-grid" id="landsGrid"></div>
 
     <!-- Footer -->
     <footer>
@@ -461,10 +464,8 @@
     </footer>
 
     <script>
-        const BIN_ID = "65f01234a35fbc035f8d1234"; // خادم سحابي افتراضي
-        const ADMIN_PASS = "1234"; // كلمة سر لوحة التحكم
+        const ADMIN_PASS = "1234";
 
-        // الأراضي المبدئية
         let defaultLands = [
             {
                 code: "K1",
@@ -473,16 +474,8 @@
                 location: "القاهرة - التجمع الخامس",
                 area: "500 م²",
                 price: "1,500,000 ج.م",
-                img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                code: "K2",
-                type: "تجاري",
-                title: "موقع استثماري نادٍ على شارعين تجاريين جاهزة للتطوير",
-                location: "الجيزة - 6 أكتوبر",
-                area: "1200 م²",
-                price: "4,200,000 ج.م",
-                img: "https://images.unsplash.com/photo-1628624747186-a941c476b7ef?auto=format&fit=crop&w=600&q=80"
+                img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80",
+                video: ""
             }
         ];
 
@@ -502,12 +495,24 @@
             grid.innerHTML = "";
 
             lands.forEach((land, index) => {
+                let mediaHtml = `<img src="${land.img}" alt="${land.title}" class="card-img">`;
+                
+                // إذا كان الرابط فيديو مباشر MP4
+                if (land.video && land.video.endsWith(".mp4")) {
+                    mediaHtml = `<video controls class="card-video" poster="${land.img}"><source src="${land.video}" type="video/mp4"></video>`;
+                }
+
+                let videoBtnHtml = "";
+                if (land.video && !land.video.endsWith(".mp4")) {
+                    videoBtnHtml = `<a href="${land.video}" target="_blank" class="btn-video-link">🎥 مشاهدة فيديو الأرض</a>`;
+                }
+
                 grid.innerHTML += `
                     <div class="land-card">
-                        <div class="card-img-wrapper">
+                        <div class="card-media-wrapper">
                             <span class="badge-code">كود #${land.code}</span>
                             <span class="badge-type">${land.type}</span>
-                            <img src="${land.img}" alt="${land.title}" class="card-img">
+                            ${mediaHtml}
                             <button class="btn-delete" onclick="deleteLand(${index})">حذف 🗑️</button>
                         </div>
                         <div class="card-body">
@@ -520,7 +525,10 @@
                                     <span>المساحة: ${land.area}</span>
                                     <span class="price-tag">${land.price}</span>
                                 </div>
-                                <a href="https://wa.me/201027372264?text=مرحباً%20منصة%20أراضينا،%20أنا%20مشتري%20جاد%20وأريد%20طلب%20تنسيق%20معاينة%20للأرض%20كود%20${land.code}" class="btn-preview" target="_blank">📱 طلب تنسيق معاينة</a>
+                                <div class="action-btns">
+                                    ${videoBtnHtml}
+                                    <a href="https://wa.me/201027372264?text=مرحباً%20منصة%20أراضينا،%20أنا%20مشتري%20جاد%20وأريد%20طلب%20تنسيق%20معاينة%20للأرض%20كود%20${land.code}" class="btn-preview" target="_blank">📱 طلب تنسيق معاينة</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -551,14 +559,15 @@
                 type: document.getElementById("landType").value,
                 area: document.getElementById("landArea").value,
                 price: document.getElementById("landPrice").value,
-                img: document.getElementById("landImg").value
+                img: document.getElementById("landImg").value,
+                video: document.getElementById("landVideo").value
             };
 
             let lands = getLands();
             lands.unshift(newLand);
             saveLands(lands);
 
-            alert("تم نشر الأرض بنجاح! 🎉");
+            alert("تم نشر الأرض مع الفيديو بنجاح! 🎉");
             closeAdminModal();
             this.reset();
         });
@@ -571,7 +580,6 @@
             }
         }
 
-        // تشغيل العرض عند فتح الصفحة
         renderLands();
     </script>
 
