@@ -73,17 +73,6 @@
             transition: 0.3s;
         }
 
-        .btn-admin {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 13px;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
         /* Hero Banner */
         .hero {
             background: linear-gradient(rgba(11, 102, 35, 0.9), rgba(11, 102, 35, 0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80') center/cover;
@@ -306,7 +295,7 @@
             border-radius: 5px;
             font-size: 11px;
             cursor: pointer;
-            display: none;
+            display: none; /* مخفي تماماً عن العامة ولن يظهر إلا عبر الرابط السري */
             z-index: 5;
         }
 
@@ -424,11 +413,10 @@
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Header (خالي تماماً وبدون أي أزرار تحكم للعامة) -->
     <header>
         <div class="logo" onclick="goHome()">🏞️ أراضينا <span>.مصر</span></div>
         <div class="nav-btns">
-            <button class="btn-admin" onclick="openAdminModal()">⚙️ لوحة التحكم</button>
             <a href="https://wa.me/201027372264?text=مرحباً%20إدارة%20منصة%20أراضينا،%20أريد%20إضافة%20أرض%20جديدة%20للبيع" class="btn-add-land" target="_blank">+ أضف أرضك</a>
         </div>
     </header>
@@ -516,7 +504,8 @@
     </footer>
 
     <script>
-        const ADMIN_PASS = "265201";
+        // كلمة السر الخاصة برابط لوحة التحكم
+        const ADMIN_PASS = "265201Mowafy";
 
         let defaultLands = [
             {
@@ -553,7 +542,7 @@
                             <span class="badge-code">كود #${land.code}</span>
                             <span class="badge-type">${land.type}</span>
                             <img src="${land.img}" alt="${land.title}" class="card-img">
-                            <button class="btn-delete" onclick="event.stopPropagation(); deleteLand(${index})">حذف 🗑️</button>
+                            <button class="btn-delete" id="delBtn_${index}" onclick="event.stopPropagation(); deleteLand(${index})">حذف 🗑️</button>
                         </div>
                         <div class="card-body">
                             <div onclick="showDetails(${index})">
@@ -611,18 +600,23 @@
             window.scrollTo(0, 0);
         }
 
-        function openAdminModal() {
-            let pass = prompt("أدخل كلمة السر للوصول للوحة التحكم:");
-            if (pass === ADMIN_PASS) {
-                document.getElementById("adminModal").style.display = "flex";
-                document.querySelectorAll('.btn-delete').forEach(b => b.style.display = "block");
-            } else if (pass !== null) {
-                alert("كلمة السر غير صحيحة!");
+        // 🔗 الفحص التلقائي للرابط السري: إذا كتب الرابط السري الخاص بك، تفتح اللوحة فوراً بعد إدخال الباسورد
+        window.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash === "#admin") {
+                let pass = prompt("أدخل كلمة السر الخاصة بلوحة التحكم:");
+                if (pass === ADMIN_PASS) {
+                    document.getElementById("adminModal").style.display = "flex";
+                    document.querySelectorAll('.btn-delete').forEach(b => b.style.display = "block");
+                } else {
+                    alert("كلمة السر خطأ!");
+                    window.location.hash = ""; // مسح الرابط السري للحماية
+                }
             }
-        }
+        });
 
         function closeAdminModal() {
             document.getElementById("adminModal").style.display = "none";
+            window.location.hash = ""; // العودة للوضع العادي عند الإغلاق
         }
 
         document.getElementById("addLandForm").addEventListener("submit", function(e) {
