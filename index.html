@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة أراضينا - تسويق ومعاينة الأراضي</title>
+    <!-- Tailwind CSS للتصميم السريع والحديث -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- الهيدر / النافبار -->
+    <header class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <i class="fa-solid font-sharp fa-map-location-dot text-amber-400"></i> أراضينا
+            </h1>
+            <button onclick="openModal()" class="bg-amber-400 hover:bg-amber-500 text-emerald-900 font-bold px-4 py-2 rounded-lg transition duration-300">
+                <i class="fa-solid fa-plus text-sm"></i> أضف أرضك مجاناً
+            </button>
+        </div>
+    </header>
+
+    <!-- الهيرو / واجهة الموقع -->
+    <section class="bg-emerald-800 text-white py-12 px-4 text-center relative">
+        <h2 class="text-3xl md:text-4xl font-extrabold mb-4">اعرض أرضك مجاناً.. ولا تدفع إلا بعد البيع</h2>
+        <p class="text-emerald-100 max-w-2xl mx-auto text-lg">نحن نصل بين البائع والمشتري مباشرة بحيادية وأمان. لا توجد مصاريف نشر إعلانات.</p>
+    </section>
+
+    <!-- شريط البحث والفلترة -->
+    <div class="container mx-auto px-4 -mt-6 relative z-10">
+        <div class="bg-white rounded-xl shadow-md p-4 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-xs text-gray-500 mb-1">المنطقة</label>
+                <select id="filterLocation" class="w-full p-2 border rounded-lg outline-none focus:border-emerald-600">
+                    <option value="all">كل المناطق</option>
+                    <option value="الرياض">الرياض</option>
+                    <option value="جدة">جدة</option>
+                    <option value="القاهرة">القاهرة</option>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-xs text-gray-500 mb-1">نوع الاستخدام</label>
+                <select id="filterType" class="w-full p-2 border rounded-lg outline-none focus:border-emerald-600">
+                    <option value="all">الكل</option>
+                    <option value="سكني">سكني</option>
+                    <option value="تجاري">تجاري</option>
+                    <option value="زراعي">زراعي</option>
+                </select>
+            </div>
+            <button onclick="filterLands()" class="bg-emerald-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-emerald-800 transition">
+                تصفية العروض
+            </button>
+        </div>
+    </div>
+
+    <!-- شبكة عرض الأراضي -->
+    <main class="container mx-auto px-4 py-10">
+        <h3 class="text-2xl font-bold mb-6 text-gray-800 border-r-4 border-emerald-600 pr-3">أحدث الأراضي المتاحة للمعاينة</h3>
+        
+        <div id="landsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- سيتم إضافة الأراضي ديناميكياً بواسطة JavaScript -->
+        </div>
+    </main>
+
+    <!-- مودال (نافذة) أضف أرضك -->
+    <div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center p-4 z-50">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 relative">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-500 text-xl font-bold">&times;</button>
+            <h3 class="text-xl font-bold text-emerald-800 mb-4">أضف بيانات أرضك مجاناً</h3>
+            <p class="text-sm text-gray-600 mb-4">لن نتقاضى منك أي رسوم، وسيتم التواصل معك لمعاينة الأرض قبل النشر.</p>
+            
+            <form id="addLandForm" onsubmit="submitForm(event)" class="space-y-3">
+                <input type="text" id="ownerName" placeholder="اسمك الكريم" required class="w-full p-2 border rounded-lg">
+                <input type="tel" id="ownerPhone" placeholder="رقم الهاتف / الواتساب" required class="w-full p-2 border rounded-lg">
+                <input type="text" id="landLocation" placeholder="موقع الأرض (المدينة/الحي)" required class="w-full p-2 border rounded-lg">
+                <input type="number" id="landArea" placeholder="المساحة (متر مربع)" required class="w-full p-2 border rounded-lg">
+                <input type="number" id="landPrice" placeholder="السعر المطلوب" required class="w-full p-2 border rounded-lg">
+                <select id="landType" class="w-full p-2 border rounded-lg">
+                    <option value="سكني">سكني</option>
+                    <option value="تجاري">تجاري</option>
+                    <option value="زراعي">زراعي</option>
+                </select>
+                <button type="submit" class="w-full bg-emerald-700 text-white font-bold py-2 rounded-lg hover:bg-emerald-800">إرسال البيانات</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ضع رقم هاتفك هنا بدلاً من الرقم التخيلي (شاملاً كود الدولة بدون +)
+const MY_PHONE_NUMBER ="201027372264"; 
+
+        // أراضي تجريبية للعرض المباشر
+        const lands = [
+            {
+                id: "101",
+                location: "القاهرة",
+                type: "سكني",
+                area: "500 م²",
+                price: "1,500,000",
+                image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80",
+                desc: "قطعة أرض ممتازة على شمسية، قريبة من الخدمات والشارع الرئيسي."
+            },
+            {
+                id: "102",
+                location: "الرياض",
+                type: "تجاري",
+                area: "1200 م²",
+                price: "4,200,000",
+                image: "https://images.unsplash.com/photo-1628624747186-a941c476b7ef?w=500&q=80",
+                desc: "موقع استثماري نادٍ على شارعين تجاريين، جاهزة للتطوير."
+            },
+            {
+                id: "103",
+                location: "جدة",
+                type: "زراعي",
+                area: "5000 م²",
+                price: "850,000",
+                image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=500&q=80",
+                desc: "أرض زراعية خصبة بها بئر مياه وتصلح للخدمات والاستراحات."
+            }
+        ];
+
+        // عرض الأراضي في الصفحة
+        function displayLands(items) {
+            const grid = document.getElementById('landsGrid');
+            grid.innerHTML = '';
+            
+            items.forEach(land => {
+                const waMessage = encodeURIComponent(`أهلاً بك في منصة أراضينا.. أنا مهتم بمعاينة وحجز الأرض كود (${land.id}) الموجودة في ${land.location}.`);
+                const waLink = `https://wa.me/${MY_PHONE_NUMBER}?text=${waMessage}`;
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative">
+                                <img src="${land.image}" alt="صورة الأرض" class="w-full h-48 object-cover">
+                                <span class="absolute top-2 right-2 bg-emerald-700 text-white text-xs px-3 py-1 rounded-full font-bold">كود: ${land.id}</span>
+                                <span class="absolute top-2 left-2 bg-amber-400 text-emerald-900 text-xs px-3 py-1 rounded-full font-bold">${land.type}</span>
+                            </div>
+                            <div class="p-4">
+                                <div class="text-xs text-gray-400 mb-1"><i class="fa-solid fa-location-dot"></i> ${land.location}</div>
+                                <h4 class="font-bold text-lg mb-2 text-gray-800">${land.desc}</h4>
+                                <div class="flex justify-between items-center text-sm text-gray-600 border-t pt-3 mt-3">
+                                    <span><i class="fa-solid fa-ruler-combined"></i> المساحة: ${land.area}</span>
+                                    <span class="font-bold text-emerald-700 text-base">${land.price}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t">
+                            <a href="${waLink}" target="_blank" class="block text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg transition duration-200">
+                                <i class="fa-brands fa-whatsapp text-lg"></i> طلب معاينة مباشرة
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // الفلترة
+        function filterLands() {
+            const loc = document.getElementById('filterLocation').value;
+            const type = document.getElementById('filterType').value;
+
+            const filtered = lands.filter(land => {
+                const matchLoc = loc === 'all' || land.location === loc;
+                const matchType = type === 'all' || land.type === type;
+                return matchLoc && matchType;
+            });
+
+            displayLands(filtered);
+        }
+
+        // تحكم بالنافذة (Modal)
+        function openModal() { document.getElementById('addModal').classList.remove('hidden'); document.getElementById('addModal').classList.add('flex'); }
+        function closeModal() { document.getElementById('addModal').classList.remove('flex'); document.getElementById('addModal').classList.add('hidden'); }
+
+        // عند إرسال البائع لبلاغ أرضه
+        function submitForm(e) {
+            e.preventDefault();
+            const name = document.getElementById('ownerName').value;
+            const phone = document.getElementById('ownerPhone').value;
+            const loc = document.getElementById('landLocation').value;
+            const area = document.getElementById('landArea').value;
+            const price = document.getElementById('landPrice').value;
+
+            const msg = encodeURIComponent(`طلب إضافة أرض جديدة:\nالاسم: ${name}\nرقم التواصل: ${phone}\nالموقع: ${loc}\nالمساحة: ${area}م\nالسعر المطلوب: ${price}`);
+            window.open(`https://wa.me/${MY_PHONE_NUMBER}?text=${msg}`, '_blank');
+            closeModal();
+        }
+
+        // التشغيل المبدئي
+        displayLands(lands);
+    </script>
+</body>
+</html>
