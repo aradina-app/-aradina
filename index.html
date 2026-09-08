@@ -56,6 +56,11 @@
             color: var(--accent-color);
         }
 
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+        }
+
         .btn-add-land {
             background-color: var(--accent-color);
             color: #000;
@@ -67,8 +72,15 @@
             transition: 0.3s;
         }
 
-        .btn-add-land:hover {
-            background-color: #f1c40f;
+        .btn-admin {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         /* Hero Banner */
@@ -126,12 +138,89 @@
             border-radius: 15px;
             text-decoration: none;
             font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
         }
 
-        /* Search & Filter Bar */
+        /* Admin Modal Panel */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .admin-box {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-submit-land {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-close-admin {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* Filter Section */
         .filter-section {
             max-width: 900px;
             margin: -25px auto 30px;
@@ -151,30 +240,6 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
-            outline: none;
-        }
-
-        /* Features Bar */
-        .features-bar {
-            display: flex;
-            justify-content: space-around;
-            max-width: 900px;
-            margin: 0 auto 30px;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border-right: 4px solid var(--accent-color);
-        }
-
-        .feature-item h3 {
-            color: var(--primary-color);
-            font-size: 18px;
-        }
-
-        .feature-item p {
-            font-size: 12px;
-            color: var(--text-muted);
         }
 
         /* Section Title */
@@ -197,21 +262,14 @@
             gap: 20px;
         }
 
-        /* Land Card */
         .land-card {
             background: var(--card-bg);
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
             display: flex;
             flex-direction: column;
-        }
-
-        .land-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            position: relative;
         }
 
         .card-img-wrapper {
@@ -249,6 +307,20 @@
             font-weight: bold;
         }
 
+        .btn-delete {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+            display: none;
+        }
+
         .card-body {
             padding: 15px;
             flex-grow: 1;
@@ -261,16 +333,12 @@
             color: var(--text-muted);
             font-size: 12px;
             margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .land-title {
             font-size: 15px;
             font-weight: 700;
             margin-bottom: 10px;
-            line-height: 1.4;
         }
 
         .details-row {
@@ -299,31 +367,14 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
-            transition: background 0.3s;
         }
 
-        .btn-preview:hover {
-            background-color: var(--primary-hover);
-        }
-
-        /* Footer */
         footer {
             background-color: #1a252f;
             color: white;
             text-align: center;
             padding: 25px 20px;
             font-size: 13px;
-            margin-top: auto;
-        }
-
-        footer p {
-            margin-bottom: 8px;
-        }
-
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 22px; }
-            .hero p { font-size: 13px; }
-            .filter-control { flex: 1 1 100%; }
         }
     </style>
 </head>
@@ -332,7 +383,10 @@
     <!-- Header -->
     <header>
         <div class="logo">🏞️ أراضينا <span>.مصر</span></div>
-        <a href="https://wa.me/201027372264?text=مرحباً%20إدارة%20منصة%20أراضينا،%20أريد%20إضافة%20أرض%20جديدة%20للبيع%20وتسديد%20رسوم%20الإعلان%20والتنسيق" class="btn-add-land" target="_blank">+ أضف أرضك الآن</a>
+        <div class="nav-btns">
+            <button class="btn-admin" onclick="openAdminModal()">⚙️ لوحة التحكم</button>
+            <a href="https://wa.me/201027372264?text=مرحباً%20إدارة%20منصة%20أراضينا،%20أريد%20إضافة%20أرض%20جديدة%20للبيع" class="btn-add-land" target="_blank">+ أضف أرضك</a>
+        </div>
     </header>
 
     <!-- Hero Section -->
@@ -349,157 +403,55 @@
         </div>
     </section>
 
-    <!-- Search & Filters -->
-    <div class="filter-section">
-        <select class="filter-control" id="cityFilter">
-            <option value="">كل المحافظات (27 محافظة)</option>
-            <option value="القاهرة">القاهرة</option>
-            <option value="الجيزة">الجيزة</option>
-            <option value="الإسكندرية">الإسكندرية</option>
-            <option value="الدقهلية">الدقهلية</option>
-            <option value="الشرقية">الشرقية</option>
-            <option value="المنوفية">المنوفية</option>
-            <option value="القليوبية">القليوبية</option>
-            <option value="البحيرة">البحيرة</option>
-            <option value="الغربية">الغربية</option>
-            <option value="بورسعيد">بورسعيد</option>
-            <option value="دمياط">دمياط</option>
-            <option value="الإسماعيلية">الإسماعيلية</option>
-            <option value="السويس">السويس</option>
-            <option value="كفر الشيخ">كفر الشيخ</option>
-            <option value="الفيوم">الفيوم</option>
-            <option value="بني سويف">بني سويف</option>
-            <option value="المنيا">المنيا</option>
-            <option value="أسيوط">أسيوط</option>
-            <option value="سوهاج">سوهاج</option>
-            <option value="قنا">قنا</option>
-            <option value="الأقصر">الأقصر</option>
-            <option value="أسوان">أسوان</option>
-            <option value="مطروح">مطروح</option>
-            <option value="الوادي الجديد">الوادي الجديد</option>
-            <option value="البحر الأحمر">البحر الأحمر</option>
-            <option value="شمال سيناء">شمال سيناء</option>
-            <option value="جنوب سيناء">جنوب سيناء</option>
-        </select>
-
-        <select class="filter-control" id="typeFilter">
-            <option value="">نوع الاستثمار (الكل)</option>
-            <option value="زراعي">زراعي</option>
-            <option value="سكني">سكني</option>
-            <option value="تجاري">تجاري / صناعي</option>
-        </select>
-    </div>
-
-    <!-- Features Bar -->
-    <div class="features-bar">
-        <div class="feature-item">
-            <h3>تنسيق كامل</h3>
-            <p>ترتيب موعد المعاينة أونلاين</p>
-        </div>
-        <div class="feature-item">
-            <h3>ربط مباشر</h3>
-            <p>بين المشتري والبائع بخصوصية</p>
-        </div>
-        <div class="feature-item">
-            <h3>عمولة عادلة</h3>
-            <p>تحفظ حقوق كافة الأطراف</p>
+    <!-- Admin Panel Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-box">
+            <h2>لوحة إضافة أرض جديدة (خاص بالمدير)</h2>
+            <form id="addLandForm">
+                <div class="form-group">
+                    <label>كود الأرض (مثال: K5)</label>
+                    <input type="text" id="landCode" placeholder="K5" required>
+                </div>
+                <div class="form-group">
+                    <label>عنوان الأرض / وصف سريع</label>
+                    <input type="text" id="landTitle" placeholder="قطعة أرض ممتازة على شارع رئيسي" required>
+                </div>
+                <div class="form-group">
+                    <label>المحافظة والمنطقة</label>
+                    <input type="text" id="landLocation" placeholder="القاهرة - التجمع الخامس" required>
+                </div>
+                <div class="form-group">
+                    <label>نوع الأرض</label>
+                    <select id="landType">
+                        <option value="سكني">سكني</option>
+                        <option value="زراعي">زراعي</option>
+                        <option value="تجاري">تجاري / صناعي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>المساحة</label>
+                    <input type="text" id="landArea" placeholder="500 م²" required>
+                </div>
+                <div class="form-group">
+                    <label>السعر (بالجنية)</label>
+                    <input type="text" id="landPrice" placeholder="1,500,000 ج.م" required>
+                </div>
+                <div class="form-group">
+                    <label>رابط صورة الأرض (URL)</label>
+                    <input type="url" id="landImg" placeholder="https://..." required>
+                </div>
+                <button type="submit" class="btn-submit-land">➕ نشر الأرض فوراً</button>
+                <button type="button" class="btn-close-admin" onclick="closeAdminModal()">إغلاق</button>
+            </form>
         </div>
     </div>
 
     <!-- Section Title -->
-    <h2 class="section-title">أحدث الأراضي المتاحة للمعاينة</h2>
+    <h2 class="section-title">الأراضي المعروضة حالياً</h2>
 
     <!-- Land Cards Grid -->
-    <div class="lands-grid">
-
-        <!-- Card 1 -->
-        <div class="land-card">
-            <div class="card-img-wrapper">
-                <span class="badge-code">كود #K1</span>
-                <span class="badge-type">سكني</span>
-                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80" alt="أرض بالقاهرة" class="card-img">
-            </div>
-            <div class="card-body">
-                <div>
-                    <div class="location-tag">📍 القاهرة - التجمع الخامس</div>
-                    <h3 class="land-title">قطعة أرض ممتازة على شمسية، قريبة من الخدمات والشارع الرئيسي</h3>
-                </div>
-                <div>
-                    <div class="details-row">
-                        <span>المساحة: 500 م²</span>
-                        <span class="price-tag">1,500,000 ج.م</span>
-                    </div>
-                    <a href="https://wa.me/201027372264?text=مرحباً%20منصة%20أراضينا،%20أنا%20مشتري%20جاد%20وأريد%20طلب%20تنسيق%20معاينة%20للأرض%20كود%20K1" class="btn-preview" target="_blank">📱 طلب تنسيق معاينة</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="land-card">
-            <div class="card-img-wrapper">
-                <span class="badge-code">كود #K2</span>
-                <span class="badge-type">تجاري</span>
-                <img src="https://images.unsplash.com/photo-1628624747186-a941c476b7ef?auto=format&fit=crop&w=600&q=80" alt="أرض بـ 6 أكتوبر" class="card-img">
-            </div>
-            <div class="card-body">
-                <div>
-                    <div class="location-tag">📍 الجيزة - 6 أكتوبر</div>
-                    <h3 class="land-title">موقع استثماري نادٍ على شارعين تجاريين جاهزة للتطوير</h3>
-                </div>
-                <div>
-                    <div class="details-row">
-                        <span>المساحة: 1200 م²</span>
-                        <span class="price-tag">4,200,000 ج.م</span>
-                    </div>
-                    <a href="https://wa.me/201027372264?text=مرحباً%20منصة%20أراضينا،%20أنا%20مشتري%20جاد%20وأريد%20طلب%20تنسيق%20معاينة%20للأرض%20كود%20K2" class="btn-preview" target="_blank">📱 طلب تنسيق معاينة</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="land-card">
-            <div class="card-img-wrapper">
-                <span class="badge-code">كود #K3</span>
-                <span class="badge-type">زراعي</span>
-                <img src="https://images.unsplash.com/photo-1592417817098-8f3d6928e469?auto=format&fit=crop&w=600&q=80" alt="أرض بالبحيرة" class="card-img">
-            </div>
-            <div class="card-body">
-                <div>
-                    <div class="location-tag">📍 البحيرة - وادي النطرون</div>
-                    <h3 class="land-title">أرض زراعية خصبة بها بئر مياه وتصلح للخدمات والاستراحات</h3>
-                </div>
-                <div>
-                    <div class="details-row">
-                        <span>المساحة: 5000 م²</span>
-                        <span class="price-tag">850,000 ج.م</span>
-                    </div>
-                    <a href="https://wa.me/201027372264?text=مرحباً%20منصة%20أراضينا،%20أنا%20مشتري%20جاد%20وأريد%20طلب%20تنسيق%20معاينة%20للأرض%20كود%20K3" class="btn-preview" target="_blank">📱 طلب تنسيق معاينة</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="land-card">
-            <div class="card-img-wrapper">
-                <span class="badge-code">كود #K4</span>
-                <span class="badge-type">زراعي</span>
-                <img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=600&q=80" alt="أرض بالشرقية" class="card-img">
-            </div>
-            <div class="card-body">
-                <div>
-                    <div class="location-tag">📍 الشرقية - الصالحية الجديدة</div>
-                    <h3 class="land-title">مزرعة أشجار موالح مثمرة مزودة بنظام ري حديث بالكامل</h3>
-                </div>
-                <div>
-                    <div class="details-row">
-                        <span>المساحة: 5 أفدنة</span>
-                        <span class="price-tag">2,100,000 ج.م</span>
-                    </div>
-                    <a href="https://wa.me/201027372264?text=مرحباً%20منصة%20أراضينا،%20أنا%20مشتري%20جاد%20وأريد%20طلب%20تنسيق%20معاينة%20للأرض%20كود%20K4" class="btn-preview" target="_blank">📱 طلب تنسيق معاينة</a>
-                </div>
-            </div>
-        </div>
-
+    <div class="lands-grid" id="landsGrid">
+        <!-- الأراضي يتم تحميلها هنا تلقائياً -->
     </div>
 
     <!-- Footer -->
@@ -507,6 +459,121 @@
         <p>© منصة أراضينا - خدمات التنسيق العقاري والربط المباشر في مصر.</p>
         <p style="opacity: 0.8; font-size: 12px;">تحويل الرسوم الفورية: فودافون كاش (01027372264) | InstaPay (ibrahimamowafy)</p>
     </footer>
+
+    <script>
+        const BIN_ID = "65f01234a35fbc035f8d1234"; // خادم سحابي افتراضي
+        const ADMIN_PASS = "1234"; // كلمة سر لوحة التحكم
+
+        // الأراضي المبدئية
+        let defaultLands = [
+            {
+                code: "K1",
+                type: "سكني",
+                title: "قطعة أرض ممتازة على شمسية، قريبة من الخدمات والشارع الرئيسي",
+                location: "القاهرة - التجمع الخامس",
+                area: "500 م²",
+                price: "1,500,000 ج.م",
+                img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                code: "K2",
+                type: "تجاري",
+                title: "موقع استثماري نادٍ على شارعين تجاريين جاهزة للتطوير",
+                location: "الجيزة - 6 أكتوبر",
+                area: "1200 م²",
+                price: "4,200,000 ج.م",
+                img: "https://images.unsplash.com/photo-1628624747186-a941c476b7ef?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        function getLands() {
+            let saved = localStorage.getItem("aradina_lands");
+            return saved ? JSON.parse(saved) : defaultLands;
+        }
+
+        function saveLands(lands) {
+            localStorage.setItem("aradina_lands", JSON.stringify(lands));
+            renderLands();
+        }
+
+        function renderLands() {
+            const grid = document.getElementById("landsGrid");
+            const lands = getLands();
+            grid.innerHTML = "";
+
+            lands.forEach((land, index) => {
+                grid.innerHTML += `
+                    <div class="land-card">
+                        <div class="card-img-wrapper">
+                            <span class="badge-code">كود #${land.code}</span>
+                            <span class="badge-type">${land.type}</span>
+                            <img src="${land.img}" alt="${land.title}" class="card-img">
+                            <button class="btn-delete" onclick="deleteLand(${index})">حذف 🗑️</button>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="location-tag">📍 ${land.location}</div>
+                                <h3 class="land-title">${land.title}</h3>
+                            </div>
+                            <div>
+                                <div class="details-row">
+                                    <span>المساحة: ${land.area}</span>
+                                    <span class="price-tag">${land.price}</span>
+                                </div>
+                                <a href="https://wa.me/201027372264?text=مرحباً%20منصة%20أراضينا،%20أنا%20مشتري%20جاد%20وأريد%20طلب%20تنسيق%20معاينة%20للأرض%20كود%20${land.code}" class="btn-preview" target="_blank">📱 طلب تنسيق معاينة</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openAdminModal() {
+            let pass = prompt("أدخل كلمة السر للوصول للوحة التحكم:");
+            if (pass === ADMIN_PASS) {
+                document.getElementById("adminModal").style.display = "flex";
+                document.querySelectorAll('.btn-delete').forEach(b => b.style.display = "block");
+            } else if (pass !== null) {
+                alert("كلمة السر غير صحيحة!");
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById("adminModal").style.display = "none";
+        }
+
+        document.getElementById("addLandForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            let newLand = {
+                code: document.getElementById("landCode").value,
+                title: document.getElementById("landTitle").value,
+                location: document.getElementById("landLocation").value,
+                type: document.getElementById("landType").value,
+                area: document.getElementById("landArea").value,
+                price: document.getElementById("landPrice").value,
+                img: document.getElementById("landImg").value
+            };
+
+            let lands = getLands();
+            lands.unshift(newLand);
+            saveLands(lands);
+
+            alert("تم نشر الأرض بنجاح! 🎉");
+            closeAdminModal();
+            this.reset();
+        });
+
+        function deleteLand(index) {
+            if (confirm("هل أنت تأكد من حذف هذه الأرض؟")) {
+                let lands = getLands();
+                lands.splice(index, 1);
+                saveLands(lands);
+            }
+        }
+
+        // تشغيل العرض عند فتح الصفحة
+        renderLands();
+    </script>
 
 </body>
 </html>
